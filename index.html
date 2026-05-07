@@ -3,22 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <title>PlasticFriends</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:Inter, Arial;
+    background:linear-gradient(135deg,#0f0f0f,#1a1a1a);
+    color:white;
+}
+
+/* HEADER */
+header{
+    padding:25px;
+    text-align:center;
+    background:rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    position:sticky;
+    top:0;
+}
+
+/* TITLE */
+h1{
+    margin:0;
+    font-size:28px;
+}
+
+/* INPUT */
+input{
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    outline:none;
+    margin-top:10px;
+    width:220px;
+}
+
+/* GRID */
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    padding:40px;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    padding:20px;
+    border-radius:16px;
+    text-align:center;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 10px 30px rgba(0,255,204,0.2);
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#00ffcc;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{
+    background:#00cfa3;
+}
+
+/* CART */
+.cart{
+    margin:20px;
+    padding:20px;
+    background:rgba(255,255,255,0.05);
+    border-radius:16px;
+}
+</style>
 </head>
 
-<body style="background:#0f0f0f;color:white;font-family:Arial;">
+<body>
 
-<h1>PlasticFriends 🛍</h1>
+<header>
+<h1>🛍 PlasticFriends</h1>
+<p>Handmade & 3D Prints</p>
 
-<!-- имя -->
-<input id="username" placeholder="Введите имя"><br><br>
+<input id="username" placeholder="Введите имя">
+</header>
 
-<!-- товары -->
-<button onclick="add('Брелок',3)">Брелок 3€</button>
-<button onclick="add('Браслет',5)">Браслет 5€</button>
+<!-- PRODUCTS -->
+<div class="container">
 
-<hr>
+<div class="card">
+<h3>Брелок</h3>
+<p>3€</p>
+<button onclick="add('Брелок',3)">Купить</button>
+</div>
 
-<h2>Корзина</h2>
+<div class="card">
+<h3>Браслет</h3>
+<p>5€</p>
+<button onclick="add('Браслет',5)">Купить</button>
+</div>
+
+<div class="card">
+<h3>Головоломка</h3>
+<p>8€</p>
+<button onclick="add('Головоломка',8)">Купить</button>
+</div>
+
+</div>
+
+<!-- CART -->
+<div class="cart">
+
+<h2>🛒 Корзина</h2>
 <div id="cart"></div>
 
 <p>Итого: <span id="total">0</span>€</p>
@@ -27,20 +134,20 @@
 
 <hr>
 
-<h2>Заказы</h2>
+<h2>📦 Заказы</h2>
 <div id="orders"></div>
+
+</div>
 
 <script>
 
 let cart=[];
 
-// добавить
 function add(name,price){
 cart.push({name,price});
 render();
 }
 
-// корзина
 function render(){
 let total=0;
 document.getElementById("cart").innerHTML="";
@@ -54,18 +161,17 @@ document.getElementById("cart").innerHTML+=
 document.getElementById("total").innerText=total;
 }
 
-// заказ
 function order(){
 
 let name=document.getElementById("username").value;
 
 if(!name){
-alert("Введите имя");
+alert("Введите имя!");
 return;
 }
 
 if(cart.length==0){
-alert("Корзина пустая");
+alert("Корзина пустая!");
 return;
 }
 
@@ -84,7 +190,6 @@ render();
 loadOrders();
 }
 
-// показать
 function loadOrders(){
 
 let orders=JSON.parse(localStorage.getItem("orders")||"[]");
@@ -93,8 +198,8 @@ document.getElementById("orders").innerHTML="";
 
 orders.forEach(o=>{
 document.getElementById("orders").innerHTML+=`
-<div style="background:#222;margin:10px;padding:10px">
-👤 ${o.user}<br>
+<div style="background:rgba(255,255,255,0.05);padding:10px;margin:10px;border-radius:12px">
+👤 <b>${o.user}</b><br>
 ${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
 <b>${o.status}</b>
 </div>
