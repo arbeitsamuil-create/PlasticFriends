@@ -1,25 +1,8 @@
-<script>
-let user = JSON.parse(localStorage.getItem("user"));
-
-if(!user){
-    window.location.href = "login.html";
-}
-</script>
-
-<div style="text-align:center;padding:10px;background:#1c1c1c;">
-    Willkommen, <span id="username"></span> 👋
-</div>
-
-<script>
-document.getElementById("username").innerText = user.name;
-</script>
-
 <!DOCTYPE html>
-<html lang="de">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlasticFriends.com</title>
+<title>PlasticFriends Shop</title>
 
 <style>
 body{
@@ -30,12 +13,10 @@ body{
 }
 
 header{
-    background:#1c1c1c;
-    padding:30px;
     text-align:center;
+    padding:20px;
+    background:#1c1c1c;
 }
-
-h1{color:#00ffcc;}
 
 .container{
     display:flex;
@@ -46,29 +27,26 @@ h1{color:#00ffcc;}
 
 .card{
     background:#1b1b1b;
-    width:220px;
+    width:200px;
     margin:10px;
-    padding:15px;
-    border-radius:12px;
+    padding:10px;
+    border-radius:10px;
 }
 
 button{
     width:100%;
-    padding:10px;
+    padding:8px;
     background:#00ffcc;
     border:none;
-    margin-top:10px;
+    margin-top:5px;
     cursor:pointer;
     font-weight:bold;
 }
-
-button:hover{background:white;color:black;}
 
 .cart{
     background:#1c1c1c;
     padding:15px;
     margin:20px;
-    border-radius:10px;
 }
 
 a{color:#00ffcc;}
@@ -78,58 +56,57 @@ a{color:#00ffcc;}
 <body>
 
 <header>
-<h1>PlasticFriends.com</h1>
-<p>Handgemachte Perlen & 3D-Druck Produkte</p>
+<h1>PlasticFriends 🛍</h1>
 </header>
 
 <div class="container">
 
 <div class="card">
-<h3>Perlen Schlüsselanhänger</h3>
+<h3>Брелок</h3>
 <p>3€</p>
-<button onclick="add('Schlüsselanhänger',3)">Kaufen</button>
+<button onclick="add('Брелок',3)">Купить</button>
 </div>
 
 <div class="card">
-<h3>Armband</h3>
+<h3>Браслет</h3>
 <p>5€</p>
-<button onclick="add('Armband',5)">Kaufen</button>
+<button onclick="add('Браслет',5)">Купить</button>
 </div>
 
 <div class="card">
-<h3>3D Puzzle</h3>
+<h3>3D головоломка</h3>
 <p>8€</p>
-<button onclick="add('Puzzle',8)">Kaufen</button>
-</div>
-
-<div class="card">
-<h3>3D Spiel</h3>
-<p>10€</p>
-<button onclick="add('Spiel',10)">Kaufen</button>
+<button onclick="add('Головоломка',8)">Купить</button>
 </div>
 
 </div>
 
 <div class="cart">
-<h2>Warenkorb 🛒</h2>
+
+<h2>Корзина 🛒</h2>
 <div id="cart"></div>
-<p>Gesamt: <span id="total">0</span>€</p>
+<p>Итого: <span id="total">0</span>€</p>
 
-<button onclick="order()">Bestellung aufgeben</button>
+<button onclick="order()">Оформить заказ</button>
 
-<br><br>
-<a href="admin.html">Admin Panel öffnen</a>
+<hr>
+
+<h2>Мои заказы 📦</h2>
+<div id="orders"></div>
+
 </div>
 
 <script>
 
 let cart = [];
 
+// добавление товара
 function add(name, price){
     cart.push({name, price});
     render();
 }
 
+// корзина
 function render(){
     let c = document.getElementById("cart");
     let total = 0;
@@ -143,9 +120,11 @@ function render(){
     document.getElementById("total").innerText = total;
 }
 
+// создать заказ
 function order(){
+
     if(cart.length == 0){
-        alert("Warenkorb ist leer");
+        alert("Корзина пустая");
         return;
     }
 
@@ -153,16 +132,41 @@ function order(){
 
     orders.push({
         items: cart,
-        status:"in Bearbeitung"
+        status: "готовится"
     });
 
     localStorage.setItem("orders", JSON.stringify(orders));
 
-    alert("Bestellung abgeschickt 🛠️");
-
     cart = [];
     render();
+    loadOrders();
 }
+
+// показать заказы + чек
+function loadOrders(){
+
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    let out = document.getElementById("orders");
+
+    out.innerHTML = "";
+
+    orders.forEach((o,i)=>{
+
+        let html = "<div style='background:#111;padding:10px;margin:10px;border-radius:10px'>";
+        html += "<b>Заказ #" + (i+1) + "</b><br>";
+
+        o.items.forEach(it=>{
+            html += it.name + " - " + it.price + "€<br>";
+        });
+
+        html += "<br><b>Статус:</b> " + o.status;
+        html += "</div>";
+
+        out.innerHTML += html;
+    });
+}
+
+loadOrders();
 
 </script>
 
