@@ -1,3 +1,9 @@
+<script>
+if(localStorage.getItem("admin") !== "true"){
+    window.location.href = "admin-login.html";
+}
+</script>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,3 +47,62 @@ load();
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login</title>
+
+<style>
+body{
+    background:#111;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    padding-top:80px;
+}
+
+input{
+    padding:10px;
+    margin:5px;
+    width:220px;
+}
+
+button{
+    padding:10px;
+    width:240px;
+    background:#00ffcc;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Admin Login 🔐</h1>
+
+<input id="name" placeholder="Name"><br>
+<input id="pass" type="password" placeholder="Passwort"><br>
+
+<button onclick="login()">Einloggen</button>
+
+<script>
+function login(){
+    let name = document.getElementById("name").value;
+    let pass = document.getElementById("pass").value;
+
+    if(name === "PlasticFriends" && pass === "productkey2026"){
+        localStorage.setItem("admin", "true");
+        window.location.href = "admin.html";
+    } else {
+        alert("Falsche Daten ❌");
+    }
+}
+</script>
+
+</body>
+</html>
+
