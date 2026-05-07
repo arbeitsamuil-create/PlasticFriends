@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlasticFriends.com</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f0f0f;
+    color:white;
+}
+
+header{
+    background:#1c1c1c;
+    padding:30px;
+    text-align:center;
+}
+
+h1{color:#00ffcc;}
+
+.container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:20px;
+}
+
+.card{
+    background:#1b1b1b;
+    width:220px;
+    margin:10px;
+    padding:15px;
+    border-radius:12px;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:#00ffcc;
+    border:none;
+    margin-top:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{background:white;color:black;}
+
+.cart{
+    background:#1c1c1c;
+    padding:15px;
+    margin:20px;
+    border-radius:10px;
+}
+
+a{color:#00ffcc;}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>PlasticFriends.com</h1>
+<p>Handgemachte Perlen & 3D-Druck Produkte</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h3>Perlen Schlüsselanhänger</h3>
+<p>3€</p>
+<button onclick="add('Schlüsselanhänger',3)">Kaufen</button>
+</div>
+
+<div class="card">
+<h3>Armband</h3>
+<p>5€</p>
+<button onclick="add('Armband',5)">Kaufen</button>
+</div>
+
+<div class="card">
+<h3>3D Puzzle</h3>
+<p>8€</p>
+<button onclick="add('Puzzle',8)">Kaufen</button>
+</div>
+
+<div class="card">
+<h3>3D Spiel</h3>
+<p>10€</p>
+<button onclick="add('Spiel',10)">Kaufen</button>
+</div>
+
+</div>
+
+<div class="cart">
+<h2>Warenkorb 🛒</h2>
+<div id="cart"></div>
+<p>Gesamt: <span id="total">0</span>€</p>
+
+<button onclick="order()">Bestellung aufgeben</button>
+
+<br><br>
+<a href="admin.html">Admin Panel öffnen</a>
+</div>
+
+<script>
+
+let cart = [];
+
+function add(name, price){
+    cart.push({name, price});
+    render();
+}
+
+function render(){
+    let c = document.getElementById("cart");
+    let total = 0;
+    c.innerHTML = "";
+
+    cart.forEach(i=>{
+        total += i.price;
+        c.innerHTML += "<p>"+i.name+" - "+i.price+"€</p>";
+    });
+
+    document.getElementById("total").innerText = total;
+}
+
+function order(){
+    if(cart.length == 0){
+        alert("Warenkorb ist leer");
+        return;
+    }
+
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+
+    orders.push({
+        items: cart,
+        status:"in Bearbeitung"
+    });
+
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    alert("Bestellung abgeschickt 🛠️");
+
+    cart = [];
+    render();
+}
+
+</script>
+
+</body>
+</html>
