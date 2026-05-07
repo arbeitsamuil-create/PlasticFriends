@@ -3,19 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <title>PlasticFriends</title>
+
 <style>
-body{background:#0f0f0f;color:white;font-family:Arial;margin:0;}
-header{background:#1c1c1c;padding:15px;text-align:center;}
-button{padding:8px;background:#00ffcc;border:none;font-weight:bold;cursor:pointer;}
-.card{background:#1b1b1b;padding:10px;margin:10px;width:200px;}
-.container{display:flex;flex-wrap:wrap;justify-content:center;}
-.cart{background:#1c1c1c;padding:15px;margin:20px;}
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f0f0f;
+    color:white;
+}
+
+/* HEADER */
+header{
+    background:#1c1c1c;
+    padding:20px;
+    text-align:center;
+}
+
+/* СЕТКА ТОВАРОВ */
+.container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+    padding:40px;
+}
+
+/* КАРТОЧКИ */
+.card{
+    background:#1b1b1b;
+    padding:15px;
+    width:220px;
+    border-radius:12px;
+    transition:0.3s;
+    transform:scale(1);
+    text-align:center;
+}
+
+/* 🔥 ЭФФЕКТ ПРИБЛИЖЕНИЯ */
+.card:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 20px rgba(0,255,204,0.5);
+}
+
+/* КНОПКИ */
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    background:#00ffcc;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* КОРЗИНА */
+.cart{
+    background:#1c1c1c;
+    padding:20px;
+    margin:20px;
+    border-radius:10px;
+}
+
+/* ССЫЛКА */
+a{
+    color:#00ffcc;
+}
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 проверка логина -->
+<!-- 🔐 защита входа -->
 <script>
 if(localStorage.getItem("logged") !== "yes"){
     window.location.href="login.html";
@@ -27,44 +85,56 @@ if(localStorage.getItem("logged") !== "yes"){
 
 👋 Привет, <span id="user"></span>
 
-<button onclick="logout()">Выйти</button>
+<button onclick="logout()" style="width:120px;">Выйти</button>
 
+<a href="admin-login.html" style="margin-left:10px;">Админ панель</a>
 </header>
 
+<!-- ТОВАРЫ -->
 <div class="container">
 
 <div class="card">
-Брелок 3€
-<button onclick="add('Брелок',3)">Купить</button>
+<h3>Брелок</h3>
+<p>3€</p>
+<button onclick="addToCart('Брелок',3)">Купить</button>
 </div>
 
 <div class="card">
-Браслет 5€
-<button onclick="add('Браслет',5)">Купить</button>
+<h3>Браслет</h3>
+<p>5€</p>
+<button onclick="addToCart('Браслет',5)">Купить</button>
+</div>
+
+<div class="card">
+<h3>Головоломка</h3>
+<p>8€</p>
+<button onclick="addToCart('Головоломка',8)">Купить</button>
 </div>
 
 </div>
 
+<!-- КОРЗИНА -->
 <div class="cart">
 
-<h3>Корзина 🛒</h3>
+<h2>Корзина 🛒</h2>
 <div id="cart"></div>
 
 <p>Итого: <span id="total">0</span>€</p>
 
-<button onclick="order()">Заказать</button>
+<button onclick="order()">Оформить заказ</button>
 
 <hr>
 
-<h3>Заказы 📦</h3>
+<h3>Мои заказы 📦</h3>
 <div id="orders"></div>
 
 </div>
 
 <script>
 
-let cart=[];
+let cart = [];
 
+// имя
 document.getElementById("user").innerText =
 localStorage.getItem("username");
 
@@ -74,59 +144,62 @@ localStorage.clear();
 window.location.href="login.html";
 }
 
-// добавить
-function add(n,p){
-cart.push({name:n,price:p});
-render();
+// добавить в корзину
+function addToCart(name,price){
+cart.push({name,price});
+renderCart();
 }
 
-// корзина
-function render(){
-let t=0;
-cartDiv.innerHTML="";
+// показать корзину
+function renderCart(){
+let total = 0;
+cartDiv.innerHTML = "";
+
 cart.forEach(i=>{
-t+=i.price;
-cartDiv.innerHTML+=`<p>${i.name} ${i.price}€</p>`;
+total += i.price;
+cartDiv.innerHTML += `<p>${i.name} - ${i.price}€</p>`;
 });
-total.innerText=t;
+
+totalEl.innerText = total;
 }
 
 // заказ
 function order(){
 
-if(cart.length==0){
-alert("Пусто");
+if(cart.length == 0){
+alert("Корзина пустая");
 return;
 }
 
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
+let orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
 orders.push({
-items:cart,
-status:"готовится"
+items: cart,
+status: "готовится"
 });
 
-localStorage.setItem("orders",JSON.stringify(orders));
+localStorage.setItem("orders", JSON.stringify(orders));
 
-cart=[];
-render();
+cart = [];
+renderCart();
 loadOrders();
 }
 
 // показать заказы
 function loadOrders(){
 
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
+let orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
-ordersDiv.innerHTML="";
+ordersDiv.innerHTML = "";
 
 orders.forEach((o,i)=>{
-ordersDiv.innerHTML+=
-`<div style="background:#111;padding:10px;margin:10px">
-Заказ ${i+1}<br>
-${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}
-<br><b>${o.status}</b>
-</div>`;
+ordersDiv.innerHTML += `
+<div style="background:#111;padding:10px;margin:10px;border-radius:10px">
+<b>Заказ ${i+1}</b><br>
+${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
+<b>${o.status}</b>
+</div>
+`;
 });
 
 }
