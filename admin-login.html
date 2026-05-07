@@ -2,38 +2,58 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Login</title>
+<title>Вход администратора</title>
+
 <style>
-body{background:#111;color:white;font-family:Arial;text-align:center;padding-top:80px;}
-input{padding:10px;margin:5px;width:220px;}
-button{padding:10px;width:240px;background:#00ffcc;border:none;font-weight:bold;}
+body{
+    background:#111;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    padding-top:80px;
+}
+
+input{
+    padding:10px;
+    margin:5px;
+    width:220px;
+}
+
+button{
+    padding:10px;
+    width:240px;
+    background:#00ffcc;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Вход 👤</h1>
+<h1>Вход администратора 🔐</h1>
 
-<input id="name" placeholder="Имя"><br><br>
+<input id="name" placeholder="Имя"><br>
+<input id="pass" type="password" placeholder="Пароль"><br><br>
 
 <button onclick="login()">Войти</button>
 
 <script>
 function login(){
 
-let name = document.getElementById("name").value;
+    let name = document.getElementById("name").value;
+    let pass = document.getElementById("pass").value;
 
-if(name){
+    // ДАННЫЕ АДМИНА
+    if(name === "PlasticFriends" && pass === "productkey2026"){
+        
+        localStorage.setItem("admin","true");
+        window.location.href = "admin.html";
 
-localStorage.setItem("logged","yes");
-localStorage.setItem("username",name);
-
-window.location.href="index.html";
-
-}else{
-alert("Введите имя");
-}
-
+    } else {
+        alert("Неверный логин или пароль ❌");
+    }
 }
 </script>
 
