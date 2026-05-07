@@ -124,3 +124,25 @@ footer{
 
 </body>
 </html>
+<script>
+function order(){
+    if(cart.length == 0){
+        alert("Корзина пустая");
+        return;
+    }
+
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+
+    orders.push({
+        items: cart,
+        status: "готовится"
+    });
+
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    alert("Заказ отправлен! 🛠️");
+
+    cart = [];
+    updateCart();
+}
+</script>
