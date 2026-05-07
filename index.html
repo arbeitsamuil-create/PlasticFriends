@@ -3,107 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <title>PlasticFriends</title>
-
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:#0f0f0f;
-color:white;
-}
-
-header{
-background:#1c1c1c;
-padding:20px;
-text-align:center;
-}
-
-.container{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:25px;
-padding:40px;
-}
-
-.card{
-background:#1b1b1b;
-padding:15px;
-width:220px;
-border-radius:12px;
-text-align:center;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.08);
-box-shadow:0 0 20px rgba(0,255,204,0.4);
-}
-
-button{
-width:100%;
-padding:10px;
-margin-top:10px;
-background:#00ffcc;
-border:none;
-font-weight:bold;
-cursor:pointer;
-}
-
-.cart{
-background:#1c1c1c;
-padding:20px;
-margin:20px;
-border-radius:10px;
-}
-
-input{
-padding:10px;
-width:200px;
-margin-top:10px;
-}
-</style>
 </head>
 
-<body>
+<body style="background:#0f0f0f;color:white;font-family:Arial;">
 
-<header>
-<h2>PlasticFriends 🛍</h2>
-</header>
+<h1>PlasticFriends 🛍</h1>
 
-<!-- 👤 ИМЯ -->
-<div style="text-align:center;margin:20px;">
-<h3>Введите имя</h3>
-<input id="username" placeholder="Ваше имя">
-</div>
+<!-- имя -->
+<input id="username" placeholder="Введите имя"><br><br>
 
-<!-- ТОВАРЫ -->
-<div class="container">
+<!-- товары -->
+<button onclick="add('Брелок',3)">Брелок 3€</button>
+<button onclick="add('Браслет',5)">Браслет 5€</button>
 
-<div class="card">
-<h3>Брелок</h3>
-<p>3€</p>
-<button onclick="add('Брелок',3)">Купить</button>
-</div>
+<hr>
 
-<div class="card">
-<h3>Браслет</h3>
-<p>5€</p>
-<button onclick="add('Браслет',5)">Купить</button>
-</div>
-
-<div class="card">
-<h3>Головоломка</h3>
-<p>8€</p>
-<button onclick="add('Головоломка',8)">Купить</button>
-</div>
-
-</div>
-
-<!-- КОРЗИНА -->
-<div class="cart">
-
-<h2>Корзина 🛒</h2>
+<h2>Корзина</h2>
 <div id="cart"></div>
 
 <p>Итого: <span id="total">0</span>€</p>
@@ -112,10 +27,8 @@ margin-top:10px;
 
 <hr>
 
-<h3>Заказы 📦</h3>
+<h2>Заказы</h2>
 <div id="orders"></div>
-
-</div>
 
 <script>
 
@@ -147,7 +60,7 @@ function order(){
 let name=document.getElementById("username").value;
 
 if(!name){
-alert("Введите имя!");
+alert("Введите имя");
 return;
 }
 
@@ -171,20 +84,21 @@ render();
 loadOrders();
 }
 
-// показать заказы
+// показать
 function loadOrders(){
 
 let orders=JSON.parse(localStorage.getItem("orders")||"[]");
 
 document.getElementById("orders").innerHTML="";
 
-orders.forEach((o,i)=>{
+orders.forEach(o=>{
 document.getElementById("orders").innerHTML+=`
-<div style="background:#111;padding:10px;margin:10px;border-radius:10px">
-👤 <b>${o.user}</b><br>
+<div style="background:#222;margin:10px;padding:10px">
+👤 ${o.user}<br>
 ${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
 <b>${o.status}</b>
-</div>`;
+</div>
+`;
 });
 
 }
