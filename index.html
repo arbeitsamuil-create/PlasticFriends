@@ -1,13 +1,8 @@
-<div style="background:#1c1c1c;padding:10px;text-align:center;">
-  👋 Hallo, <span id="userName"></span>
-  <button onclick="logout()" style="margin-left:10px;">Выйти</button>
-</div>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>PlasticFriends Shop</title>
+<title>PlasticFriends</title>
 
 <style>
 body{
@@ -18,9 +13,9 @@ body{
 }
 
 header{
-    text-align:center;
-    padding:20px;
     background:#1c1c1c;
+    padding:15px;
+    text-align:center;
 }
 
 .container{
@@ -53,34 +48,42 @@ button{
     padding:15px;
     margin:20px;
 }
-
-a{color:#00ffcc;}
 </style>
 </head>
 
 <body>
 
+<!-- 🔐 ЗАЩИТА ВХОДА -->
+<script>
+if(localStorage.getItem("logged") !== "true"){
+    window.location.href = "login.html";
+}
+</script>
+
 <header>
-<h1>PlasticFriends 🛍</h1>
+
+<h2>PlasticFriends 🛍</h2>
+
+👋 Hallo, <span id="user"></span>
+
+<button onclick="logout()">Выйти</button>
+
 </header>
 
 <div class="container">
 
 <div class="card">
-<h3>Брелок</h3>
-<p>3€</p>
+Брелок 3€
 <button onclick="add('Брелок',3)">Купить</button>
 </div>
 
 <div class="card">
-<h3>Браслет</h3>
-<p>5€</p>
+Браслет 5€
 <button onclick="add('Браслет',5)">Купить</button>
 </div>
 
 <div class="card">
-<h3>3D головоломка</h3>
-<p>8€</p>
+Головоломка 8€
 <button onclick="add('Головоломка',8)">Купить</button>
 </div>
 
@@ -96,7 +99,7 @@ a{color:#00ffcc;}
 
 <hr>
 
-<h2>Мои заказы 📦</h2>
+<h3>Мои заказы 📦</h3>
 <div id="orders"></div>
 
 </div>
@@ -105,69 +108,73 @@ a{color:#00ffcc;}
 
 let cart = [];
 
-// добавление товара
-function add(name, price){
-    cart.push({name, price});
+// имя
+document.getElementById("user").innerText =
+localStorage.getItem("username");
+
+// выход
+function logout(){
+    localStorage.clear();
+    window.location.href="login.html";
+}
+
+// добавить в корзину
+function add(name,price){
+    cart.push({name,price});
     render();
 }
 
 // корзина
 function render(){
-    let c = document.getElementById("cart");
     let total = 0;
-    c.innerHTML = "";
+    cartDiv.innerHTML = "";
 
     cart.forEach(i=>{
         total += i.price;
-        c.innerHTML += "<p>"+i.name+" - "+i.price+"€</p>";
+        cartDiv.innerHTML += `<p>${i.name} - ${i.price}€</p>`;
     });
 
-    document.getElementById("total").innerText = total;
+    totalEl.innerText = total;
 }
 
-// создать заказ
+// заказ
 function order(){
 
-    if(cart.length == 0){
+    if(cart.length==0){
         alert("Корзина пустая");
         return;
     }
 
-    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    let orders = JSON.parse(localStorage.getItem("orders")||"[]");
 
     orders.push({
-        items: cart,
-        status: "готовится"
+        items:cart,
+        status:"готовится"
     });
 
-    localStorage.setItem("orders", JSON.stringify(orders));
+    localStorage.setItem("orders",JSON.stringify(orders));
 
     cart = [];
     render();
     loadOrders();
 }
 
-// показать заказы + чек
+// показать заказы
 function loadOrders(){
 
-    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
-    let out = document.getElementById("orders");
+    let orders = JSON.parse(localStorage.getItem("orders")||"[]");
 
-    out.innerHTML = "";
+    ordersDiv.innerHTML = "";
 
     orders.forEach((o,i)=>{
 
-        let html = "<div style='background:#111;padding:10px;margin:10px;border-radius:10px'>";
-        html += "<b>Заказ #" + (i+1) + "</b><br>";
-
-        o.items.forEach(it=>{
-            html += it.name + " - " + it.price + "€<br>";
-        });
-
-        html += "<br><b>Статус:</b> " + o.status;
-        html += "</div>";
-
-        out.innerHTML += html;
+        ordersDiv.innerHTML += `
+        <div style="background:#111;margin:10px;padding:10px">
+        <b>Заказ ${i+1}</b><br>
+        ${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
+        <b>${o.status}</b>
+        </div>
+        `;
     });
 }
 
@@ -175,35 +182,5 @@ loadOrders();
 
 </script>
 
-    <script>
-
-// защита входа
-if(localStorage.getItem("user") !== "true"){
-    window.location.href = "login.html";
-}
-
-// имя пользователя (если есть)
-let savedName = localStorage.getItem("username") || "Gast";
-document.getElementById("userName").innerText = savedName;
-
-// выйти из аккаунта
-function logout(){
-    localStorage.removeItem("user");
-    localStorage.removeItem("username");
-    window.location.href = "login.html";
-}
-
-</script>
 </body>
 </html>
-
-<br><br>
-<a href="admin-login.html" style="color:#00ffcc;">
-Админ панель 🔐
-</a>
-
-<script>
-if(localStorage.getItem("user") !== "true"){
-    window.location.href = "login.html";
-}
-</script>
