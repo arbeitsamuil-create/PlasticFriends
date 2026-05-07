@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin PlasticFriends</title>
+<style>
+body{font-family:Arial;background:#111;color:white;padding:20px;}
+.box{background:#1b1b1b;padding:10px;margin:10px;border-radius:10px;}
+</style>
+</head>
+
+<body>
+
+<h1>Админ панель 🧾</h1>
+
+<div id="orders"></div>
+
+<script>
+function load(){
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+
+    let out = document.getElementById("orders");
+    out.innerHTML = "";
+
+    orders.forEach((o,i)=>{
+        let html = "<div class='box'>";
+        html += "<h3>Заказ "+(i+1)+"</h3>";
+
+        o.items.forEach(it=>{
+            html += "<p>"+it.name+" - "+it.price+"€</p>";
+        });
+
+        html += "<b>Статус:</b> "+o.status;
+        html += "</div>";
+
+        out.innerHTML += html;
+    });
+}
+
+load();
+</script>
+
+</body>
+</html>
