@@ -31,8 +31,8 @@ header{
     padding:15px;
     width:220px;
     border-radius:12px;
-    transition:0.3s;
     text-align:center;
+    transition:0.3s;
 }
 
 .card:hover{
@@ -57,32 +57,26 @@ button{
     border-radius:10px;
 }
 
-a{color:#00ffcc;}
+input{
+    padding:10px;
+    width:200px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 проверка входа -->
-<script>
-if(localStorage.getItem("logged") !== "true"){
-    window.location.href="login.html";
-}
-</script>
-
 <header>
-
 <h2>PlasticFriends 🛍</h2>
-
-👋 Привет, <span id="user"></span>
-
-<button onclick="logout()" style="width:120px;">Выйти</button>
-
-<a href="admin-login.html" style="margin-left:10px;">Админ</a>
-
 </header>
 
-<!-- товары -->
+<!-- 👤 ВВОД ИМЕНИ -->
+<div style="text-align:center;margin:20px;">
+<h3>Введите имя</h3>
+<input id="username" placeholder="Ваше имя">
+</div>
+
+<!-- ТОВАРЫ -->
 <div class="container">
 
 <div class="card">
@@ -105,7 +99,7 @@ if(localStorage.getItem("logged") !== "true"){
 
 </div>
 
-<!-- корзина -->
+<!-- КОРЗИНА -->
 <div class="cart">
 
 <h2>Корзина 🛒</h2>
@@ -126,17 +120,7 @@ if(localStorage.getItem("logged") !== "true"){
 
 let cart=[];
 
-// имя
-document.getElementById("user").innerText =
-localStorage.getItem("username");
-
-// выход
-function logout(){
-localStorage.clear();
-window.location.href="login.html";
-}
-
-// добавить в корзину
+// добавить товар
 function add(name,price){
 cart.push({name,price});
 render();
@@ -155,8 +139,15 @@ cartDiv.innerHTML+=`<p>${i.name} - ${i.price}€</p>`;
 totalEl.innerText=total;
 }
 
-// оформить заказ
+// заказ
 function order(){
+
+let name=document.getElementById("username").value;
+
+if(!name){
+alert("Введите имя!");
+return;
+}
 
 if(cart.length==0){
 alert("Корзина пустая");
@@ -166,6 +157,7 @@ return;
 let orders=JSON.parse(localStorage.getItem("orders")||"[]");
 
 orders.push({
+user:name,
 items:cart,
 status:"готовится"
 });
@@ -187,6 +179,7 @@ ordersDiv.innerHTML="";
 orders.forEach((o,i)=>{
 ordersDiv.innerHTML+=`
 <div style="background:#111;padding:10px;margin:10px;border-radius:10px">
+<b>👤 ${o.user}</b><br>
 <b>Заказ ${i+1}</b><br>
 ${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
 <b>${o.status}</b>
