@@ -5,10 +5,11 @@
 <title>Login</title>
 </head>
 
-<body style="background:#111;color:white;text-align:center;font-family:Arial;padding-top:80px;">
+<body style="background:#111;color:white;font-family:Arial;text-align:center;padding-top:80px;">
 
 <h1>Вход 🔐</h1>
 
+<input id="name" placeholder="Имя"><br><br>
 <input id="login" placeholder="Логин"><br><br>
 <input id="pass" type="password" placeholder="Пароль"><br><br>
 
@@ -17,20 +18,20 @@
 <script>
 function go(){
 
+let name = document.getElementById("name").value;
 let login = document.getElementById("login").value;
 let pass = document.getElementById("pass").value;
 
 // 🔥 твои данные
-if(login === "PlasticFriends" && pass === "productkey2026"){
+if(login === "PlasticFriends" && pass === "productkey2026" && name){
 
-// сохраняем вход
-sessionStorage.setItem("auth","ok");
+localStorage.setItem("auth","true");
+localStorage.setItem("username",name);
 
-// переход
 window.location.href="index.html";
 
 }else{
-alert("Неверный логин или пароль ❌");
+alert("❌ Неверные данные");
 }
 
 }
