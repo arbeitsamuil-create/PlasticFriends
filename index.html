@@ -202,3 +202,8 @@ function logout(){
 Админ панель 🔐
 </a>
 
+<script>
+if(localStorage.getItem("user") !== "true"){
+    window.location.href = "login.html";
+}
+</script>
