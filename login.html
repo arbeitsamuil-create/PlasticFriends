@@ -1,116 +1,43 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Login PlasticFriends</title>
+<title>Login</title>
 <style>
-body{
-    background:#111;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-    padding-top:80px;
-}
-
-input{
-    padding:10px;
-    margin:5px;
-    width:200px;
-}
-
-button{
-    padding:10px;
-    width:220px;
-    background:#00ffcc;
-    border:none;
-    font-weight:bold;
-    cursor:pointer;
-}
+body{background:#111;color:white;font-family:Arial;text-align:center;padding-top:80px;}
+input{padding:10px;margin:5px;width:220px;}
+button{padding:10px;width:240px;background:#00ffcc;border:none;font-weight:bold;}
 </style>
 </head>
 
 <body>
 
-<h1>PlasticFriends Login 🔐</h1>
+<h1>Вход 👤</h1>
 
-<input id="name" placeholder="Name"><br>
+<input id="name" placeholder="Имя"><br>
 <input id="email" placeholder="E-Mail"><br>
-<input id="password" type="password" placeholder="Passwort"><br>
+<input id="pass" type="password" placeholder="Пароль"><br>
 
-<button onclick="login()">Einloggen</button>
+<button onclick="login()">Войти</button>
 
 <script>
 function login(){
+
     let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("password").value;
 
-    if(name=="" || email=="" || pass==""){
-        alert("Bitte alle Felder ausfüllen");
-        return;
+    if(name && email.value && pass.value){
+
+        // 🔥 ВАЖНО: единый ключ
+        localStorage.setItem("logged","true");
+        localStorage.setItem("username", name);
+
+        window.location.href = "index.html";
+
+    } else {
+        alert("Заполните все поля");
     }
-
-    localStorage.setItem("user", JSON.stringify({
-        name:name,
-        email:email
-    }));
-
-    window.location.href = "index.html";
 }
 </script>
 
 </body>
 </html>
-
-<script>
-if(localStorage.getItem("admin")!=="true"){
-location.href="admin-login.html";
-}
-</script>
-
-<h1>Заказы 🧾</h1>
-
-<div id="out"></div>
-
-<script>
-
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
-
-function render(){
-
-out.innerHTML="";
-
-orders.forEach((o,i)=>{
-
-out.innerHTML+=`
-<div style="background:#111;padding:10px;margin:10px">
-<b>Заказ ${i+1}</b><br>
-${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
-<b>${o.status}</b><br><br>
-
-<button onclick="status(${i},'готово')">Готово</button>
-<button onclick="status(${i},'доставлено')">Доставлено</button>
-<button onclick="del(${i})">Удалить</button>
-
-</div>
-`;
-});
-
-}
-
-function status(i,s){
-orders[i].status=s;
-localStorage.setItem("orders",JSON.stringify(orders));
-render();
-}
-
-function del(i){
-orders.splice(i,1);
-localStorage.setItem("orders",JSON.stringify(orders));
-render();
-}
-
-render();
-
-</script>
-
