@@ -3,68 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <title>PlasticFriends</title>
-
 <style>
-body{
-    margin:0;
-    font-family:Arial;
-    background:#0f0f0f;
-    color:white;
-}
-
-header{
-    background:#1c1c1c;
-    padding:15px;
-    text-align:center;
-}
-
-.container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    padding:20px;
-}
-
-.card{
-    background:#1b1b1b;
-    width:200px;
-    margin:10px;
-    padding:10px;
-    border-radius:10px;
-}
-
-button{
-    width:100%;
-    padding:8px;
-    background:#00ffcc;
-    border:none;
-    margin-top:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.cart{
-    background:#1c1c1c;
-    padding:15px;
-    margin:20px;
-}
+body{background:#0f0f0f;color:white;font-family:Arial;margin:0;}
+header{background:#1c1c1c;padding:15px;text-align:center;}
+button{padding:8px;background:#00ffcc;border:none;font-weight:bold;cursor:pointer;}
+.card{background:#1b1b1b;padding:10px;margin:10px;width:200px;}
+.container{display:flex;flex-wrap:wrap;justify-content:center;}
+.cart{background:#1c1c1c;padding:15px;margin:20px;}
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 ЗАЩИТА ВХОДА -->
+<!-- 🔐 проверка логина -->
 <script>
-if(localStorage.getItem("logged") !== "true"){
-    window.location.href = "login.html";
+if(localStorage.getItem("logged") !== "yes"){
+    window.location.href="login.html";
 }
 </script>
 
 <header>
-
 <h2>PlasticFriends 🛍</h2>
 
-👋 Hallo, <span id="user"></span>
+👋 Привет, <span id="user"></span>
 
 <button onclick="logout()">Выйти</button>
 
@@ -82,100 +43,92 @@ if(localStorage.getItem("logged") !== "true"){
 <button onclick="add('Браслет',5)">Купить</button>
 </div>
 
-<div class="card">
-Головоломка 8€
-<button onclick="add('Головоломка',8)">Купить</button>
-</div>
-
 </div>
 
 <div class="cart">
 
-<h2>Корзина 🛒</h2>
+<h3>Корзина 🛒</h3>
 <div id="cart"></div>
+
 <p>Итого: <span id="total">0</span>€</p>
 
-<button onclick="order()">Оформить заказ</button>
+<button onclick="order()">Заказать</button>
 
 <hr>
 
-<h3>Мои заказы 📦</h3>
+<h3>Заказы 📦</h3>
 <div id="orders"></div>
 
 </div>
 
 <script>
 
-let cart = [];
+let cart=[];
 
-// имя
 document.getElementById("user").innerText =
 localStorage.getItem("username");
 
 // выход
 function logout(){
-    localStorage.clear();
-    window.location.href="login.html";
+localStorage.clear();
+window.location.href="login.html";
 }
 
-// добавить в корзину
-function add(name,price){
-    cart.push({name,price});
-    render();
+// добавить
+function add(n,p){
+cart.push({name:n,price:p});
+render();
 }
 
 // корзина
 function render(){
-    let total = 0;
-    cartDiv.innerHTML = "";
-
-    cart.forEach(i=>{
-        total += i.price;
-        cartDiv.innerHTML += `<p>${i.name} - ${i.price}€</p>`;
-    });
-
-    totalEl.innerText = total;
+let t=0;
+cartDiv.innerHTML="";
+cart.forEach(i=>{
+t+=i.price;
+cartDiv.innerHTML+=`<p>${i.name} ${i.price}€</p>`;
+});
+total.innerText=t;
 }
 
 // заказ
 function order(){
 
-    if(cart.length==0){
-        alert("Корзина пустая");
-        return;
-    }
+if(cart.length==0){
+alert("Пусто");
+return;
+}
 
-    let orders = JSON.parse(localStorage.getItem("orders")||"[]");
+let orders=JSON.parse(localStorage.getItem("orders")||"[]");
 
-    orders.push({
-        items:cart,
-        status:"готовится"
-    });
+orders.push({
+items:cart,
+status:"готовится"
+});
 
-    localStorage.setItem("orders",JSON.stringify(orders));
+localStorage.setItem("orders",JSON.stringify(orders));
 
-    cart = [];
-    render();
-    loadOrders();
+cart=[];
+render();
+loadOrders();
 }
 
 // показать заказы
 function loadOrders(){
 
-    let orders = JSON.parse(localStorage.getItem("orders")||"[]");
+let orders=JSON.parse(localStorage.getItem("orders")||"[]");
 
-    ordersDiv.innerHTML = "";
+ordersDiv.innerHTML="";
 
-    orders.forEach((o,i)=>{
+orders.forEach((o,i)=>{
+ordersDiv.innerHTML+=
+`<div style="background:#111;padding:10px;margin:10px">
+Заказ ${i+1}<br>
+${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}
+<br><b>${o.status}</b>
+</div>`;
+});
 
-        ordersDiv.innerHTML += `
-        <div style="background:#111;margin:10px;padding:10px">
-        <b>Заказ ${i+1}</b><br>
-        ${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
-        <b>${o.status}</b>
-        </div>
-        `;
-    });
 }
 
 loadOrders();
