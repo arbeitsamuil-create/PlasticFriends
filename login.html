@@ -62,5 +62,55 @@ function login(){
 </body>
 </html>
 
+<script>
+if(localStorage.getItem("admin")!=="true"){
+location.href="admin-login.html";
+}
+</script>
 
+<h1>Заказы 🧾</h1>
+
+<div id="out"></div>
+
+<script>
+
+let orders=JSON.parse(localStorage.getItem("orders")||"[]");
+
+function render(){
+
+out.innerHTML="";
+
+orders.forEach((o,i)=>{
+
+out.innerHTML+=`
+<div style="background:#111;padding:10px;margin:10px">
+<b>Заказ ${i+1}</b><br>
+${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
+<b>${o.status}</b><br><br>
+
+<button onclick="status(${i},'готово')">Готово</button>
+<button onclick="status(${i},'доставлено')">Доставлено</button>
+<button onclick="del(${i})">Удалить</button>
+
+</div>
+`;
+});
+
+}
+
+function status(i,s){
+orders[i].status=s;
+localStorage.setItem("orders",JSON.stringify(orders));
+render();
+}
+
+function del(i){
+orders.splice(i,1);
+localStorage.setItem("orders",JSON.stringify(orders));
+render();
+}
+
+render();
+
+</script>
 
