@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Админ панель</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#111;
+    color:white;
+    padding:20px;
+}
+
+.box{
+    background:#1b1b1b;
+    padding:10px;
+    margin:10px;
+    border-radius:10px;
+}
+
+button{
+    margin:3px;
+    padding:5px;
+    background:#00ffcc;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Админ панель 🧾</h1>
+
+<div id="orders"></div>
+
+<script>
+
+// защита
+if(localStorage.getItem("admin") !== "true"){
+    window.location.href = "admin-login.html";
+}
+
+function load(){
+
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    let out = document.getElementById("orders");
+
+    out.innerHTML = "";
+
+    orders.forEach((o,i)=>{
+
+        let html = "<div class='box'>";
+        html += "<h3>Заказ #" + (i+1) + "</h3>";
+
+        o.items.forEach(it=>{
+            html += it.name + " - " + it.price + "€<br>";
+        });
+
+        html += "<br><b>Статус:</b> " + o.status;
+
+        // кнопки управления
+        html += "<br><br>";
+
+        html += `<button onclick="setStatus(${i},'готово')">Готово</button>`;
+        html += `<button onclick="setStatus(${i},'доставлено')">Доставлено</button>`;
+        html += `<button onclick="deleteOrder(${i})">Удалить</button>`;
+
+        html += "</div>";
+
+        out.innerHTML += html;
+    });
+}
+
+// изменить статус
+function setStatus(i,status){
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders[i].status = status;
+    localStorage.setItem("orders", JSON.stringify(orders));
+    load();
+}
+
+// удалить заказ
+function deleteOrder(i){
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders.splice(i,1);
+    localStorage.setItem("orders", JSON.stringify(orders));
+    load();
+}
+
+load();
+
+</script>
+
+</body>
+</html>
