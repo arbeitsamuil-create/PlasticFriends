@@ -1,3 +1,8 @@
+<div style="background:#1c1c1c;padding:10px;text-align:center;">
+  👋 Hallo, <span id="userName"></span>
+  <button onclick="logout()" style="margin-left:10px;">Выйти</button>
+</div>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -170,5 +175,30 @@ loadOrders();
 
 </script>
 
+    <script>
+
+// защита входа
+if(localStorage.getItem("user") !== "true"){
+    window.location.href = "login.html";
+}
+
+// имя пользователя (если есть)
+let savedName = localStorage.getItem("username") || "Gast";
+document.getElementById("userName").innerText = savedName;
+
+// выйти из аккаунта
+function logout(){
+    localStorage.removeItem("user");
+    localStorage.removeItem("username");
+    window.location.href = "login.html";
+}
+
+</script>
 </body>
 </html>
+
+<br><br>
+<a href="admin-login.html" style="color:#00ffcc;">
+Админ панель 🔐
+</a>
+
