@@ -56,22 +56,26 @@ padding:20px;
 margin:20px;
 border-radius:10px;
 }
+
+input{
+padding:10px;
+width:200px;
+margin-top:10px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 защита -->
-<script>
-if(localStorage.getItem("auth") !== "true"){
-window.location.href="login.html";
-}
-</script>
-
 <header>
 <h2>PlasticFriends 🛍</h2>
-<button onclick="logout()">Выйти</button>
 </header>
+
+<!-- 👤 ИМЯ -->
+<div style="text-align:center;margin:20px;">
+<h3>Введите имя</h3>
+<input id="username" placeholder="Ваше имя">
+</div>
 
 <!-- ТОВАРЫ -->
 <div class="container">
@@ -117,23 +121,15 @@ window.location.href="login.html";
 
 let cart=[];
 
-// выход
-function logout(){
-localStorage.clear();
-window.location.href="login.html";
-}
-
-// добавить товар
+// добавить
 function add(name,price){
 cart.push({name,price});
 render();
 }
 
-// корзина (ИСПРАВЛЕНО)
+// корзина
 function render(){
-
 let total=0;
-
 document.getElementById("cart").innerHTML="";
 
 cart.forEach(i=>{
@@ -145,20 +141,25 @@ document.getElementById("cart").innerHTML+=
 document.getElementById("total").innerText=total;
 }
 
-// оформить заказ
+// заказ
 function order(){
+
+let name=document.getElementById("username").value;
+
+if(!name){
+alert("Введите имя!");
+return;
+}
 
 if(cart.length==0){
 alert("Корзина пустая");
 return;
 }
 
-let user = "User";
-
-let orders = JSON.parse(localStorage.getItem("orders")||"[]");
+let orders=JSON.parse(localStorage.getItem("orders")||"[]");
 
 orders.push({
-user:user,
+user:name,
 items:cart,
 status:"готовится"
 });
@@ -173,14 +174,14 @@ loadOrders();
 // показать заказы
 function loadOrders(){
 
-let orders = JSON.parse(localStorage.getItem("orders")||"[]");
+let orders=JSON.parse(localStorage.getItem("orders")||"[]");
 
 document.getElementById("orders").innerHTML="";
 
 orders.forEach((o,i)=>{
 document.getElementById("orders").innerHTML+=`
 <div style="background:#111;padding:10px;margin:10px;border-radius:10px">
-<b>👤 ${o.user}</b><br>
+👤 <b>${o.user}</b><br>
 ${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
 <b>${o.status}</b>
 </div>`;
