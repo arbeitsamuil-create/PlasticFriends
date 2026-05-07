@@ -6,75 +6,72 @@
 
 <style>
 body{
-    margin:0;
-    font-family:Arial;
-    background:#0f0f0f;
-    color:white;
+margin:0;
+font-family:Arial;
+background:#0f0f0f;
+color:white;
 }
 
 header{
-    background:#1c1c1c;
-    padding:20px;
-    text-align:center;
+background:#1c1c1c;
+padding:20px;
+text-align:center;
 }
 
 .container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:25px;
-    padding:40px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:25px;
+padding:40px;
 }
 
 .card{
-    background:#1b1b1b;
-    padding:15px;
-    width:220px;
-    border-radius:12px;
-    text-align:center;
-    transition:0.3s;
+background:#1b1b1b;
+padding:15px;
+width:220px;
+border-radius:12px;
+text-align:center;
+transition:0.3s;
 }
 
 .card:hover{
-    transform:scale(1.08);
-    box-shadow:0 0 20px rgba(0,255,204,0.4);
+transform:scale(1.08);
+box-shadow:0 0 20px rgba(0,255,204,0.4);
 }
 
 button{
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-    background:#00ffcc;
-    border:none;
-    font-weight:bold;
-    cursor:pointer;
+width:100%;
+padding:10px;
+margin-top:10px;
+background:#00ffcc;
+border:none;
+font-weight:bold;
+cursor:pointer;
 }
 
 .cart{
-    background:#1c1c1c;
-    padding:20px;
-    margin:20px;
-    border-radius:10px;
-}
-
-input{
-    padding:10px;
-    width:200px;
+background:#1c1c1c;
+padding:20px;
+margin:20px;
+border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- 🔐 защита -->
+<script>
+if(localStorage.getItem("auth") !== "true"){
+window.location.href="login.html";
+}
+</script>
+
 <header>
 <h2>PlasticFriends 🛍</h2>
+<button onclick="logout()">Выйти</button>
 </header>
-
-<!-- 👤 ВВОД ИМЕНИ -->
-<div style="text-align:center;margin:20px;">
-<h3>Введите имя</h3>
-<input id="username" placeholder="Ваше имя">
-</div>
 
 <!-- ТОВАРЫ -->
 <div class="container">
@@ -111,7 +108,7 @@ input{
 
 <hr>
 
-<h3>Мои заказы 📦</h3>
+<h3>Заказы 📦</h3>
 <div id="orders"></div>
 
 </div>
@@ -120,44 +117,48 @@ input{
 
 let cart=[];
 
+// выход
+function logout(){
+localStorage.clear();
+window.location.href="login.html";
+}
+
 // добавить товар
 function add(name,price){
 cart.push({name,price});
 render();
 }
 
-// корзина
+// корзина (ИСПРАВЛЕНО)
 function render(){
+
 let total=0;
-cartDiv.innerHTML="";
+
+document.getElementById("cart").innerHTML="";
 
 cart.forEach(i=>{
 total+=i.price;
-cartDiv.innerHTML+=`<p>${i.name} - ${i.price}€</p>`;
+document.getElementById("cart").innerHTML+=
+`<p>${i.name} - ${i.price}€</p>`;
 });
 
-totalEl.innerText=total;
+document.getElementById("total").innerText=total;
 }
 
-// заказ
+// оформить заказ
 function order(){
-
-let name=document.getElementById("username").value;
-
-if(!name){
-alert("Введите имя!");
-return;
-}
 
 if(cart.length==0){
 alert("Корзина пустая");
 return;
 }
 
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
+let user = "User";
+
+let orders = JSON.parse(localStorage.getItem("orders")||"[]");
 
 orders.push({
-user:name,
+user:user,
 items:cart,
 status:"готовится"
 });
@@ -172,15 +173,14 @@ loadOrders();
 // показать заказы
 function loadOrders(){
 
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
+let orders = JSON.parse(localStorage.getItem("orders")||"[]");
 
-ordersDiv.innerHTML="";
+document.getElementById("orders").innerHTML="";
 
 orders.forEach((o,i)=>{
-ordersDiv.innerHTML+=`
+document.getElementById("orders").innerHTML+=`
 <div style="background:#111;padding:10px;margin:10px;border-radius:10px">
 <b>👤 ${o.user}</b><br>
-<b>Заказ ${i+1}</b><br>
 ${o.items.map(x=>x.name+" "+x.price+"€").join("<br>")}<br>
 <b>${o.status}</b>
 </div>`;
