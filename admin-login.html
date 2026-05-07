@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Вход администратора</title>
+
+<style>
+body{
+    background:#111;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    padding-top:80px;
+}
+
+input{
+    padding:10px;
+    margin:5px;
+    width:220px;
+}
+
+button{
+    padding:10px;
+    width:240px;
+    background:#00ffcc;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Вход администратора 🔐</h1>
+
+<input id="name" placeholder="Имя"><br>
+<input id="pass" type="password" placeholder="Пароль"><br><br>
+
+<button onclick="login()">Войти</button>
+
+<script>
+function login(){
+
+    let name = document.getElementById("name").value;
+    let pass = document.getElementById("pass").value;
+
+    // ДАННЫЕ АДМИНА
+    if(name === "PlasticFriends" && pass === "productkey2026"){
+        
+        localStorage.setItem("admin","true");
+        window.location.href = "admin.html";
+
+    } else {
+        alert("Неверный логин или пароль ❌");
+    }
+}
+</script>
+
+</body>
+</html>
